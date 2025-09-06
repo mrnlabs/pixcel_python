@@ -175,15 +175,14 @@ app = FastAPI(title="Loading...", description="Application is initializing...")
 @app.on_event("startup")
 async def startup():
     """Initialize the real app on startup"""
-    global app, app_instance
-    app_instance = await create_app()
+    global app
+    real_app = await create_app()
     
-    # Replace the placeholder app with the real one
-    app.router = app_instance.router
-    app.title = app_instance.title
-    app.description = app_instance.description
-    app.version = app_instance.version
-    app.state = app_instance.state
+    # Transfer state from real app to placeholder app
+    app.state = real_app.state
+    app.title = real_app.title
+    app.description = real_app.description
+    app.version = real_app.version
 
 
 @app.on_event("shutdown") 

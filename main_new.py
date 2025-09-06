@@ -1,4 +1,5 @@
 """
+
 FastAPI Application - Clean Architecture Implementation
 Improved separation of concerns with dependency injection and layered architecture.
 """
