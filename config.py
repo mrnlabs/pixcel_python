@@ -2,7 +2,12 @@
 Secure Configuration Management
 Centralizes all configuration settings with proper validation and security.
 """
-from pydantic import BaseSettings, validator, Field
+from pydantic import Field, field_validator
+try:
+    from pydantic_settings import BaseSettings
+except ImportError:
+    # Fallback for older pydantic versions
+    from pydantic import BaseSettings
 from typing import Optional
 import os
 
@@ -44,29 +49,34 @@ class Settings(BaseSettings):
     memory_critical_threshold: int = Field(95, ge=90, le=99, env="MEMORY_CRITICAL_THRESHOLD", description="Memory usage critical threshold (%)")
     
     # Logging Configuration
-    log_level: str = Field("INFO", env="LOG_LEVEL", regex="^(DEBUG|INFO|WARNING|ERROR|CRITICAL)$", description="Logging level")
+    log_level: str = Field("INFO", env="LOG_LEVEL", pattern="^(DEBUG|INFO|WARNING|ERROR|CRITICAL)$", description="Logging level")
     log_to_file: bool = Field(True, env="LOG_TO_FILE", description="Enable logging to files")
     log_max_size_mb: int = Field(50, ge=10, le=500, env="LOG_MAX_SIZE_MB", description="Maximum log file size in MB")
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    model_config = {
+        "env_file": ".env",
+        "case_sensitive": False,
+        "extra": "ignore"
+    }
         
-    @validator('database_url')
+    @field_validator('database_url')
+    @classmethod
     def validate_database_url(cls, v):
         """Validate database URL format"""
         if not v.startswith(('mysql://', 'mysql+pymysql://', 'postgresql://', 'sqlite://')):
             raise ValueError('DATABASE_URL must be a valid database connection string')
         return v
     
-    @validator('aws_access_key', 'aws_secret_key')
+    @field_validator('aws_access_key', 'aws_secret_key')
+    @classmethod
     def validate_aws_credentials(cls, v):
         """Validate AWS credentials are present and reasonable length"""
         if len(v) < 16:
             raise ValueError('AWS credentials appear to be too short')
         return v
     
-    @validator('s3_bucket')
+    @field_validator('s3_bucket')
+    @classmethod
     def validate_s3_bucket(cls, v):
         """Validate S3 bucket name"""
         import re
