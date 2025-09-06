@@ -190,7 +190,7 @@ class ConfiguredService:
     
     def __init__(self, settings: Settings = None):
         self.settings = settings or container.get("settings")
-        self.logger = container.get("logger")(self.__class__.__name__.lower())
+        self.logger = get_logger(self.__class__.__name__.lower())
 
 
 def get_container() -> DIContainer:
