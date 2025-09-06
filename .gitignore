@@ -1,0 +1,41 @@
+# Environment variables - NEVER commit these!
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Video processing temporary files
+processed_videos/
+downloadable_videos/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.aac
+*.mp3
+*.wav
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite3
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db

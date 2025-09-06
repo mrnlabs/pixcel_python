@@ -1,0 +1,11 @@
+fastapi==0.104.1
+uvicorn==0.23.2
+sqlalchemy==1.4.46
+databases==0.8.0
+pymysql==1.1.0
+python-dotenv==1.0.0
+boto3==1.28.64
+python-multipart==0.0.6
+psutil==5.9.6
+python-jose==3.3.0
+passlib==1.7.4
